@@ -8,3 +8,4 @@ docs-source/docs/updates.md	dist/docs/updates.html	dist	fungos	https://github.co
 docs-source/projects/unibus.md	dist/projects/unibus.html	dist	unibus	https://github.com/ajmwagar/fungos-web	../fpl/unibus	https://github.com/FuturePresentLabs/unibus
 docs-source/projects/dcp.md	dist/projects/dcp.html	dist	dcp	https://github.com/ajmwagar/fungos-web	../fpl/dcp	https://github.com/FuturePresentLabs/dcp
 docs-source/umie.md	dist/projects/umie.html	dist	umie	https://github.com/ajmwagar/fungos-web	../fpl/umie	https://github.com/FuturePresentLabs/umie
+docs-source/docs/hyphae.md	dist/docs/hyphae.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungOS-linux/ims	https://github.com/ajmwagar/hyphae
