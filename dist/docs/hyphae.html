@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>hyphae — open IMS/VoLTE control plane</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/fungos.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
+<summary class="brand project-trigger" aria-label="fungOS — switch project"><img src="../theme/fungos.svg" width="30" height="30" alt="">fungOS<span class="project-chevron" aria-hidden="true">⌄</span></summary>
+<nav class="project-menu" aria-label="Choose an FPL project">
+<a class="project-option project-fungos" href="../index.html" aria-current="page"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS ✓</span></a>
+<a class="project-option project-holodeck" href="https://holodeck.fpl.dev/"><img src="../theme/holodeck.svg" width="30" height="30" alt=""><span>Holodeck</span></a>
+<a class="project-option project-umie" href="../projects/umie.html"><img src="../theme/umie.svg" width="30" height="30" alt=""><span>UMIE<small class="project-kind">Modular inference engine</small></span></a>
+<div class="project-group">Protocols</div>
+<a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
+<a class="project-option project-unibus" href="../projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
+</nav><script defer src="../theme/switcher.js"></script>
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="hyphae.md">Source Markdown</a></nav></div></header><div class="site-grid wrap docs-layout"><aside class="resources docs-sidebar" aria-label="Help and documentation"><nav aria-label="Help guides"><h2>Documentation</h2><ul><li><a href="../docs/base.html">Build and inspect fungOS</a></li><li><a href="../docs/ecosystem.html">Component ownership and interfaces</a></li><li><a href="../docs/install.html">Install and first boot</a></li><li><a href="../docs/profiles.html">Profiles and deployment boundaries</a></li><li><a href="../docs/pi.html">Raspberry Pi setup and support</a></li><li><a href="../docs/updates.html">Signed updates, repair and rollback</a></li><li><a href="../projects/unibus.html">Unibus — transport, grants and integration</a></li><li><a href="../projects/dcp.html">DCP — bounded decisions and provider integration</a></li><li><a href="../projects/umie.html">UMIE model support and integration</a></li><li><a href="../docs/hyphae.html" aria-current="page">hyphae — open IMS/VoLTE control plane</a></li></ul></nav><nav aria-label="On this page"><h2>On this page</h2><ul><li><a href="#what-it-owns">What it owns</a></li><li><a href="#status">Status</a></li><li><a href="#the-licensing-seam">The licensing seam</a></li><li><a href="#try-it">Try it</a></li><li><a href="#where-it-fits">Where it fits</a></li></ul></nav><a href="#documentation-provenance">Source and freshness</a></aside><main class="manual" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="hyphae.md">Copy for LLM</button><a href="hyphae.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="hyphae">hyphae</h1>
+<p>hyphae is a GPL-3.0-or-later, specification-derived IMS/VoLTE client for Linux
+phones. When 2G and 3G were switched off, Linux phones lost voice, because the
+AP-side IMS stack has never been open source. hyphae is the missing control
+plane: SIP, IMS-AKA, registration, dialogs, SDP, carrier profiles, the Gm
+security plane and a codec-agnostic media boundary.</p>
+<p>It is a library and a lab client, not a shipping dialer. The protocol surface is
+implemented and tested on a host with no modem and no network; the modem byte
+I/O and the licensed speech codec are the two pieces that stay outside the core.</p>
+<h2 id="what-it-owns">What it owns</h2>
+<table><thead><tr><th>Layer</th><th>Owner</th><th>Responsibility</th></tr></thead><tbody>
+<tr><td>SIP messages and transactions</td><td><code>sip</code></td><td>RFC 3261 encoding, headers, client/server transactions</td></tr>
+<tr><td>Subscriber key and USIM</td><td><code>aka</code>, <code>usim</code></td><td>Milenage, AUTN checks, TS 31.102 <code>AUTHENTICATE</code></td></tr>
+<tr><td>Control plane</td><td><code>ims</code></td><td>REGISTER/AKA, dialogs, MO/MT calls, SMS, hold/resume, E911 construction</td></tr>
+<tr><td>Carrier data</td><td><code>carrier</code></td><td>TOML profiles keyed by MCC/MNC</td></tr>
+<tr><td>Media framing</td><td><code>media</code></td><td>RTP/RTCP, jitter buffer, packet-loss concealment</td></tr>
+<tr><td>Payload formats</td><td><code>codec-amr</code>, <code>evs</code></td><td>RFC 4867 and TS 26.445 packet layout only</td></tr>
+<tr><td>Bearer and security</td><td><code>transport</code></td><td>mock, UDP/TCP, AT/QMI, MBIM, CCCI boundary, ESP/IPsec</td></tr>
+</tbody></table>
+<p>No default crate starts a thread, opens a socket or links a codec, so the whole
+protocol surface builds and tests on a laptop.</p>
+<h2 id="status">Status</h2>
+<p>Every implemented behaviour names a normative clause and the executable test
+that proves it; the requirement matrix is the project's evidence.</p>
+<table><thead><tr><th>Area</th><th>State</th></tr></thead><tbody>
+<tr><td>Registration, IMS-AKA, USIM</td><td>implemented</td></tr>
+<tr><td>Originating and terminating calls, CANCEL, PRACK, BYE</td><td>implemented</td></tr>
+<tr><td>Hold/resume, call waiting, re-INVITE and UPDATE renegotiation</td><td>implemented</td></tr>
+<tr><td>Forked INVITE, OPTIONS keepalive</td><td>implemented</td></tr>
+<tr><td>SMS over IMS, both directions</td><td>implemented</td></tr>
+<tr><td>Gm IPsec: authenticated ESP, SA negotiation, Linux XFRM</td><td>implemented</td></tr>
+<tr><td>RTP/RTCP, jitter buffer, PLC</td><td>implemented</td></tr>
+<tr><td>AT/QMI, MBIM, CCCI transports</td><td>modelled or boundary only</td></tr>
+<tr><td>Emergency request construction</td><td>implemented; never transmitted</td></tr>
+<tr><td>Byte-level modem I/O, live emergency calling</td><td>out of tree or regulated</td></tr>
+</tbody></table>
+<h2 id="the-licensing-seam">The licensing seam</h2>
+<p>IMS voice uses AMR-WB and EVS, which are patent-encumbered. hyphae keeps the
+protocol work separate from the codecs:</p>
+<ul>
+<li>the core is GPL-3.0-or-later and contains no AMR-WB or EVS implementation;
+<code>codec</code> ships the trait plus royalty-free Opus.</li>
+<li>AMR-WB lives in a separate, feature-off, patent-noticed package; its
+Apache-2.0 implementation library does not grant AMR-WB patent rights.</li>
+<li>retrofit mode runs the phone's own licensed codec; manufacture mode uses an
+ODM or licensed build. Vendor blobs are never redistributed.</li>
+<li>no code, strings or constants were derived from decompiled vendor binaries.</li>
+</ul>
+<h2 id="try-it">Try it</h2>
+<p>The client builds and tests against host-only code:</p>
+<pre><code class="language-sh">cargo test --workspace
+cargo run -p ims --example register_flow
+cargo run -p ims --example call_flow
+cd lab/pris &amp;&amp; ./run.sh   # full REGISTER over real UDP against a P-CSCF stand-in
+</code></pre>
+<p>The lab uses public 3GPP test credentials only. Live emergency calling is
+deliberately not reachable: the client builds the request and refuses to
+transmit it over any real transport.</p>
+<h2 id="where-it-fits">Where it fits</h2>
+<p>hyphae is a consumer of the rest of the stack, not a replacement for it: the
+modem supplies the IMS bearer, the network supplies the P-CSCF and S-CSCF, and
+the host supplies identity and policy. It belongs beside the other runtime
+components rather than inside provisioning or transport.</p>
+<p>Source, matrix, architecture notes and the codec-licensing decision:
+<a href="https://github.com/ajmwagar/hyphae">github.com/ajmwagar/hyphae</a>.</p>
+</article><footer class="docs-provenance"><h2 id="documentation-provenance">Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/663537f143fda6d794996e05272319bfb7a1cdef"><code>663537f</code></a> · 2026-11-01 · docs(hyphae): add hyphae IMS/VoLTE guide and manifest entry</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/663537f143fda6d794996e05272319bfb7a1cdef/docs-source/docs/hyphae.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/ajmwagar/hyphae/commit/ee181b9261e2da6d280be7e85d6a695cf222f26e"><code>ee181b9</code></a>. No changes to watched paths since review.</p><details><summary>Watched source paths</summary><ul><li><code>README.md</code></li><li><code>docs/specs.md</code></li><li><code>docs/architecture.md</code></li></ul></details></footer></main></div></body></html>
