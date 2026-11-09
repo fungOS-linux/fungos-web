@@ -1,6 +1,7 @@
 # source	output	site-root	project	source-repository	code-checkout	code-repository
 docs-source/docs/base.md	dist/docs/base.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
 docs-source/docs/ecosystem.md	dist/docs/ecosystem.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/docs/canvas-rendering.md	dist/docs/canvas-rendering.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../soil	https://github.com/fungOS-linux/soil
 docs-source/docs/install.md	dist/docs/install.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
 docs-source/docs/profiles.md	dist/docs/profiles.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
 docs-source/docs/pi.md	dist/docs/pi.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
