@@ -41,10 +41,8 @@ def load_contract() -> dict:
         return tomllib.load(handle)
 
 
-def run(argv: list[str], cwd: Path | None = None) -> str:
-    result = subprocess.run(
-        argv, cwd=cwd, text=True, capture_output=True, check=False
-    )
+def run(argv: list[str]) -> str:
+    result = subprocess.run(argv, text=True, capture_output=True, check=False)
     if result.returncode != 0:
         sys.stderr.write(result.stdout)
         sys.stderr.write(result.stderr)
@@ -65,7 +63,8 @@ def validate(publish_dir: Path, required: list[str]) -> None:
     missing = [
         name
         for name in required
-        if not (publish_dir / name).is_file() or (publish_dir / name).stat().st_size == 0
+        if not (publish_dir / name).is_file()
+        or (publish_dir / name).stat().st_size == 0
     ]
     if missing:
         raise SystemExit(
@@ -111,9 +110,8 @@ def site_cid(publish_dir: Path) -> tuple[str, dict]:
 
 def stage(publish_dir: Path, state_dir: Path, cid: str) -> tuple[Path, bool]:
     destination = state_dir / cid
-    expected, _ = site_cid(publish_dir)
     if destination.is_dir():
-        if site_cid(destination)[0] == expected:
+        if site_cid(destination)[0] == cid:
             return destination, False
         shutil.rmtree(destination)
     staging = Path(tempfile.mkdtemp(prefix=f".{cid}.", dir=state_dir))
@@ -189,7 +187,11 @@ def apply_ingress(route: dict) -> None:
     status = json.loads(run(["mycelium", "gateway", "status", "--json"]))
     routes_path = Path(status["routes"])
     document = json.loads(routes_path.read_text())
-    routes = [entry for entry in document.get("routes", []) if entry.get("name") != route["name"]]
+    routes = [
+        entry
+        for entry in document.get("routes", [])
+        if entry.get("name") != route["name"]
+    ]
     routes.append(route)
     document["routes"] = routes
     handle = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False)
@@ -208,7 +210,9 @@ def apply_ingress(route: dict) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--no-build", action="store_true", help="publish the tree as it is")
-    parser.add_argument("--docs", action="store_true", help="regenerate docs HTML from docs-source/")
+    parser.add_argument(
+        "--docs", action="store_true", help="regenerate docs HTML from docs-source/"
+    )
     parser.add_argument("--check", action="store_true", help="validate the tree and stop")
     parser.add_argument(
         "--state-dir", type=Path, default=None, help="override the staging directory"
