@@ -1,0 +1,7 @@
+name = "fungos-install"
+main = "worker.js"
+compatibility_date = "2026-11-13"
+
+routes = [
+  { pattern = "sh.fungos.dev", custom_domain = true }
+]

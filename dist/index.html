@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#283d31">
-  <meta name="description" content="fungOS is Linux built around Mycelium discovery, network topology, secure enrollment and signed software updates.">
+  <meta name="description" content="fungOS gives machines identity, discovery, DNS, secure access and signed updates. Install Mycelium, Soil and Canvas on macOS or Linux in one line.">
   <title>fungOS — Linux for connected machines</title>
   <link rel="icon" type="image/svg+xml" href="assets/fungos.svg">
   <link rel="stylesheet" href="distro.css?v=02743b6991c747478dc76cafed61c8c771a19d92">
@@ -38,6 +38,7 @@
       <h2>fungOS</h2>
       <ul>
         <li><a href="#content">Overview</a></li>
+        <li><a href="#install">Install</a></li>
         <li><a href="#core">Mycelium</a></li>
         <li><a href="#profiles">System profiles</a></li>
         <li><a href="#downloads">Build status</a></li>
@@ -57,13 +58,31 @@
     <main id="content">
       <section class="intro">
         <h1>Linux for connected machines.</h1>
-        <p>fungOS brings Mycelium’s discovery, network topology, secure enrollment and software updates into a small Linux system.</p>
-        <p>Boot a machine, join your fleet, and see what’s connected.</p>
+        <p>fungOS is a mesh-native stack: Mycelium gives every machine an identity, discovery, DNS and signed updates; Soil runs sandboxed Spores; Canvas is the workspace; Unibus moves events and media.</p>
+        <p>Install it on the macOS or Linux machine you already use, or boot the preview image in a VM.</p>
         <div class="actions">
-          <a class="button primary" href="#downloads">Build status</a>
-          <a class="button" href="#docs">Read the documentation</a>
+          <a class="button primary" href="#install">Install in one line</a>
+          <a class="button" href="#downloads">Preview images</a>
+          <a class="button" href="#docs">Documentation</a>
         </div>
-        <p class="preview-note"><strong>Preview:</strong> amd64 and arm64 root filesystems are built. QEMU enrollment, reboot persistence and signed updates are verified. Public images are not available yet.</p>
+        <p class="preview-note"><strong>Preview:</strong> fungOS Linux images are built and tested in QEMU; public images are not available yet. The Mycelium installer is available today for macOS and Linux.</p>
+      </section>
+
+      <section id="install">
+        <h2>Install in one line</h2>
+        <p>One command installs Mycelium, Soil, the Canvas workspace and the bundled Spores on macOS or Linux. It does not reinstall the operating system.</p>
+        <pre><code>curl -fsSL https://sh.fungos.dev/install.sh | bash -s --</code></pre>
+        <p>Joining an existing fleet uses a short-lived code minted by the authority:</p>
+        <pre><code>curl -fsSL https://sh.fungos.dev/install.sh | bash -s -- --code "MYC1-..."</code></pre>
+        <dl class="capabilities">
+          <dt>Identity and mesh</dt><dd>Mycelium node identity, discovery, topology, mesh DNS and the iroh-tun IPv6 overlay.</dd>
+          <dt>Access</dt><dd>Short-lived SSH certificates, roles and per-host least-privilege grants.</dd>
+          <dt>Workspace</dt><dd>Soil runtime and Canvas: native windows, tiled workspaces and terminal sessions.</dd>
+          <dt>Spores</dt><dd>Sandboxed, capability-granted apps — terminal, files, browser — launched from the catalogue.</dd>
+          <dt>Updates</dt><dd>A signed release channel, health checks and rollback.</dd>
+        </dl>
+        <p>Once the 0.1.0 archives are public, add <code>--release latest</code> to skip the source build. The installer verifies the downloaded archive against the release checksums, then asks for sudo for the root tunnel and DNS services.</p>
+        <p class="secondary">macOS, or a systemd Linux host. <a href="docs/install.html">Full install notes</a>.</p>
       </section>
 
       <section id="core">
@@ -74,6 +93,8 @@
           <dt>Enrollment</dt><dd>Provisioned machines join on first boot using short-lived Mycelium claims.</dd>
           <dt>Access</dt><dd>Manage peer identity, roles and SSH access.</dd>
           <dt>Updates</dt><dd>Distribute signed software, check activation health and recover from failed updates.</dd>
+          <dt>Workspace</dt><dd>Canvas arranges native windows, terminals and Spores into named workspaces.</dd>
+          <dt>Apps</dt><dd>Spores run as sandboxed components with explicit capability grants.</dd>
         </dl>
         <p><a href="https://github.com/ajmwagar/mycelium">Mycelium</a> also runs independently on existing machines. You don’t need to reinstall a device to bring it into your fleet.</p>
       </section>
@@ -116,7 +137,8 @@
       </section>
 
       <section id="downloads">
-        <h2>Downloads</h2>
+        <h2>Preview images</h2>
+        <p>To install on a machine you already have, use the <a href="#install">one-line installer</a>. The images below are frozen fungOS Linux builds.</p>
         <p><strong>Qualification image · amd64.</strong> A minimal Debian-based installer with Mycelium. Fresh BIOS and UEFI installation tested in QEMU. Not the full Canvas/Unibus edge image or a supported v0.1 release.</p>
         <p>
           <a class="button primary" href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/fungos-mycelium-qualification6-amd64.iso?v=qa6">ISO · 795 MiB</a>

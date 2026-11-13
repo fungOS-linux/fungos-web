@@ -1,5 +1,13 @@
 # Fab registration must select this file with netlify_config = "netlify.toml".
 # The site is dependency-free static HTML; do not run npm install/build.
+# The canonical installer lives at https://sh.fungos.dev/install.sh (a
+# Cloudflare Worker in sh-install/). Keep the main domain pointed at it too.
+[[redirects]]
+  from = "/install.sh"
+  to = "https://sh.fungos.dev/install.sh"
+  status = 302
+  force = true
+
 [build]
 publish = "dist"
 command = "test -s dist/index.html && test -s dist/distro.css && test -s dist/theme/theme.css && test -s dist/theme/REVISION && test -s dist/theme/switcher.js && test -s dist/theme/docs.js && test -s dist/projects/dcp.html && test -s dist/projects/dcp.md && test -s dist/projects/umie.md && test -s dist/projects/unibus.md && test -s dist/projects/umie.html && test -s dist/projects/unibus.html && test -s dist/theme/umie.svg && test -s dist/theme/unibus.svg && test -s dist/docs/install.html && test -s dist/docs/base.html && test -s dist/docs/updates.html && test -s dist/docs/canvas-rendering.html && test -s dist/docs/canvas-rendering.md && test -s dist/assets/fungos.svg"

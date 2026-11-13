@@ -27,6 +27,21 @@ recognizes these registered paths and applies each project's theme and current
 menu selection. Update content here; regenerate logos and navigation from the
 theme repository. Unibus is grouped with protocols, while UMIE is an application.
 
+## Installer endpoint
+
+`sh.fungos.dev/install.sh` is a Cloudflare Worker in `sh-install/` that proxies the
+canonical installer from `fungOS-linux/mycelium`. There is no bucket or uploaded
+copy to keep in sync; the Worker caches the upstream response for five minutes.
+
+Deploy it with an authenticated `wrangler`:
+
+```sh
+wrangler deploy --config sh-install/wrangler.toml
+```
+
+The route is a Worker custom domain, so Cloudflare owns the DNS record and
+certificate for `sh.fungos.dev`.
+
 ## Documentation publication
 
 `docs-source/` owns canonical site Markdown; `docs.tsv` lists its published pages

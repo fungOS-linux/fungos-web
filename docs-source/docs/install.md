@@ -8,13 +8,37 @@ watches:
 ---
 # Install and first boot
 
+## Install on an existing machine
+
+The unified installer brings Mycelium, Soil, Canvas and the terminal Spore to a
+macOS or Linux machine you already use. It does not reinstall the operating
+system.
+
+```sh
+curl -fsSL https://sh.fungos.dev/install.sh | bash -s --
+```
+
+Join an existing fleet with a short-lived code minted on the authority:
+
+```sh
+curl -fsSL https://sh.fungos.dev/install.sh | bash -s -- --code "MYC1-..."
+```
+
+Once the 0.1.0 archives are public, add `--release latest` to download and verify
+the prebuilt binaries instead of building from source. The installer installs
+Mycelium, the mesh DNS resolver, the iroh-tun overlay, Soil, the Canvas
+workspace and the terminal Spore; on macOS it also installs `fungOS.app`. Linux
+hosts need systemd. Sudo is used for the root tunnel and DNS services.
+
+## Install fungOS Linux
+
 Start with an isolated QEMU guest on a Linux KVM host. The fungOS repository includes the root filesystem builder. You must supply the boot components and configure enrollment separately. **Ready-to-flash installer images are not yet available.**
 
 ## Choose a target
 
 | Target | Starting point | Remaining work |
 | --- | --- | --- |
-| Existing Linux/macOS machine | Mycelium on the existing OS | This enrolls a host; it does not install fungOS |
+| Existing Linux/macOS machine | The one-line installer above | Installs Mycelium, Soil and Canvas; it does not install the fungOS image |
 | QEMU/KVM | Generic rootfs plus matching boot components | Persistent disk, kernel/initramfs, enrollment and signed applications |
 | Raspberry Pi | arm64 rootfs | Board firmware, kernel/modules, disk assembly and hardware qualification |
 | Cloud VM | Cloud rootfs profile | Provider boot image and provisioning integration |
