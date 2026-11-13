@@ -1,0 +1,79 @@
+# Static site contract for fungos.dev.
+#
+# One source of truth for the local build/publish path (`scripts/publish.py`)
+# and anything that mirrors it (Fab site registration, ingress routes). There is
+# no hosted build: the tree is built here, addressed by CID, and served from the
+# staging directory by `fab-sites` behind the Mycelium gateway.
+
+[site]
+id = "fungos"
+project = "fungos"
+environment = "prod"
+domain = "fungos.dev"
+aliases = ["www.fungos.dev"]
+publish_dir = "dist"
+
+[build]
+# Generated HTML and the shared layout come from this theme checkout. Relative
+# paths resolve against an available checkout; see scripts/build.sh.
+theme_dir = "../fpl-project-theme"
+theme_project = "fungos"
+docs_manifest = "docs.tsv"
+
+[publish]
+# Where CID-addressed trees are staged and the route manifest is written.
+state_dir = "~/.local/share/fungos/sites"
+
+[ingress]
+# Local name the Mycelium gateway answers on, and the loopback address
+# `fab-sites` binds. The gateway terminates TLS for the name and forwards here.
+host = "fungos.myc"
+bind = "127.0.0.1:7790"
+
+[cache]
+html = "public, max-age=0, must-revalidate"
+assets = "public, max-age=31536000, immutable"
+default = "public, max-age=300"
+asset_extensions = [
+  "avif",
+  "css",
+  "gif",
+  "ico",
+  "jpg",
+  "jpeg",
+  "js",
+  "json",
+  "map",
+  "png",
+  "svg",
+  "webp",
+  "woff",
+  "woff2",
+]
+
+# Published paths, relative to the publish directory. A publish run fails when
+# one is missing or empty: the site is served from exactly this tree.
+[check]
+required = [
+  "index.html",
+  "distro.css",
+  "assets/fungos.svg",
+  "theme/theme.css",
+  "theme/REVISION",
+  "theme/switcher.js",
+  "theme/docs.js",
+  "theme/umie.svg",
+  "theme/unibus.svg",
+  "docs/install.html",
+  "docs/install.md",
+  "docs/base.html",
+  "docs/updates.html",
+  "docs/canvas-rendering.html",
+  "docs/canvas-rendering.md",
+  "projects/dcp.html",
+  "projects/dcp.md",
+  "projects/umie.html",
+  "projects/umie.md",
+  "projects/unibus.html",
+  "projects/unibus.md",
+]
